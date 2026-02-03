@@ -4,11 +4,22 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isImageAnimating, setIsImageAnimating] = useState(false);
   const [isStatusAnimating, setIsStatusAnimating] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const canvasRef = useRef(null);
   const animationRef = useRef(null);
   const particlesRef = useRef([]);
   const rotationRef = useRef(0);
   const timeRef = useRef(0);
+
+  // Detect mobile on mount
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleImageClick = () => {
     setIsImageAnimating(true);
@@ -33,9 +44,10 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
     const centerX = width / 2;
     const centerY = height / 2;
     
-    // Initialize particles - lebih ramai untuk efek dramatis
+    // Initialize particles - adjust count for mobile
+    const particleCount = window.innerWidth < 640 ? 200 : 350;
     if (particlesRef.current.length === 0) {
-      particlesRef.current = Array.from({ length: 350 }, () => {
+      particlesRef.current = Array.from({ length: particleCount }, () => {
         const distance = 60 + Math.random() * 160;
         const isCore = distance < 100;
         return {
@@ -55,7 +67,7 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
     const drawBlackHole = (time) => {
       ctx.clearRect(0, 0, width, height);
       
-      // Outer space glow - soft integration dengan background
+      // Outer space glow
       const outerGlow = ctx.createRadialGradient(
         centerX, centerY, 0,
         centerX, centerY, 250
@@ -68,16 +80,12 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
       ctx.fillStyle = outerGlow;
       ctx.fillRect(0, 0, width, height);
 
-      // Draw accretion disk particles dengan gravitational lensing
+      // Draw particles
       particlesRef.current.forEach((particle) => {
-        // Dynamic orbital motion
         particle.angle += particle.speed;
-        
-        // Wobble effect untuk natural movement
         particle.wobble += particle.wobbleSpeed;
         const wobbleOffset = Math.sin(particle.wobble) * 4;
         
-        // Spiral inward dengan variasi
         particle.distance -= 0.03;
         if (particle.distance < 25) {
           particle.distance = particle.baseDistance;
@@ -87,27 +95,21 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
         
         const actualDistance = particle.distance + wobbleOffset;
         const x = centerX + Math.cos(particle.angle) * actualDistance;
-        const y = centerY + Math.sin(particle.angle) * actualDistance * 0.65; // elliptical orbit
+        const y = centerY + Math.sin(particle.angle) * actualDistance * 0.65;
         
-        // Distance-based opacity dengan falloff natural
         const distanceFactor = Math.max(0, 1 - (particle.distance - 60) / 160);
         const opacity = particle.opacity * distanceFactor;
         
-        // Gravitational redshift - particles get redder/brighter near center
         let particleColor = particle.color;
-        let glowIntensity = 1;
         if (particle.distance < 90) {
           const centerProximity = (90 - particle.distance) / 90;
           if (centerProximity > 0.6) {
             particleColor = '#ff6b9d';
-            glowIntensity = 1.5;
           } else if (centerProximity > 0.3) {
             particleColor = '#ff9d6b';
-            glowIntensity = 1.2;
           }
         }
         
-        // Draw particle dengan dynamic glow
         ctx.beginPath();
         ctx.arc(x, y, particle.size, 0, Math.PI * 2);
         
@@ -119,7 +121,6 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
         ctx.fillStyle = particleGradient;
         ctx.fill();
         
-        // Enhanced trails untuk particle dekat center
         if (particle.distance < 130) {
           const trailCount = particle.distance < 80 ? 3 : 2;
           for (let j = 1; j <= trailCount; j++) {
@@ -137,11 +138,8 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
         }
       });
 
-      // Event Horizon - smooth dark center
-      const horizonGradient = ctx.createRadialGradient(
-        centerX, centerY, 0,
-        centerX, centerY, 140
-      );
+      // Event Horizon
+      const horizonGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, 140);
       horizonGradient.addColorStop(0, 'rgba(0, 0, 0, 0.9)');
       horizonGradient.addColorStop(0.5, 'rgba(0, 0, 0, 0.7)');
       horizonGradient.addColorStop(0.85, 'rgba(41, 121, 255, 0.15)');
@@ -152,13 +150,10 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
       ctx.fillStyle = horizonGradient;
       ctx.fill();
 
-      // Multi-layer Photon sphere dengan pulsing
+      // Photon sphere
       for (let layer = 0; layer < 2; layer++) {
         const photonRadius = 133 + layer * 4 + 3 * Math.sin(time * 0.0012 + layer * Math.PI);
-        const photonGradient = ctx.createRadialGradient(
-          centerX, centerY, photonRadius - 2,
-          centerX, centerY, photonRadius + 2
-        );
+        const photonGradient = ctx.createRadialGradient(centerX, centerY, photonRadius - 2, centerX, centerY, photonRadius + 2);
         photonGradient.addColorStop(0, `rgba(79, 195, 247, 0)`);
         photonGradient.addColorStop(0.5, `rgba(79, 195, 247, ${0.5 - layer * 0.2})`);
         photonGradient.addColorStop(1, `rgba(79, 195, 247, 0)`);
@@ -170,13 +165,11 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
         ctx.stroke();
       }
 
-      // Enhanced vortex lines - lebih ramai
+      // Vortex lines
       const vortexOpacity = 0.15 + 0.08 * Math.sin(time * 0.0008);
-      
       for (let i = 0; i < 8; i++) {
         const angle = (i * Math.PI / 4) + rotationRef.current * 0.4;
         
-        // Main vortex line
         ctx.beginPath();
         ctx.strokeStyle = `rgba(79, 195, 247, ${vortexOpacity})`;
         ctx.lineWidth = 2;
@@ -186,15 +179,11 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
           const x = centerX + Math.cos(angle + spiral) * r;
           const y = centerY + Math.sin(angle + spiral) * r * 0.65;
           
-          if (r === 138) {
-            ctx.moveTo(x, y);
-          } else {
-            ctx.lineTo(x, y);
-          }
+          if (r === 138) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
         }
         ctx.stroke();
         
-        // Secondary faint line
         if (i % 2 === 0) {
           ctx.beginPath();
           ctx.strokeStyle = `rgba(124, 77, 255, ${vortexOpacity * 0.6})`;
@@ -205,21 +194,15 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
             const x = centerX + Math.cos(angle + Math.PI / 8 + spiral) * r;
             const y = centerY + Math.sin(angle + Math.PI / 8 + spiral) * r * 0.65;
             
-            if (r === 145) {
-              ctx.moveTo(x, y);
-            } else {
-              ctx.lineTo(x, y);
-            }
+            if (r === 145) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
           }
           ctx.stroke();
         }
       }
 
-      // Outer accretion disk glow - multi-layer
-      const diskGradient = ctx.createRadialGradient(
-        centerX, centerY, 150,
-        centerX, centerY, 230
-      );
+      // Outer glow
+      const diskGradient = ctx.createRadialGradient(centerX, centerY, 150, centerX, centerY, 230);
       diskGradient.addColorStop(0, 'rgba(41, 121, 255, 0.25)');
       diskGradient.addColorStop(0.2, 'rgba(124, 77, 255, 0.2)');
       diskGradient.addColorStop(0.5, 'rgba(0, 229, 255, 0.15)');
@@ -231,7 +214,7 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
       ctx.fillStyle = diskGradient;
       ctx.fill();
 
-      // Energy bursts - random flares
+      // Energy bursts
       const burstIntensity = Math.sin(time * 0.002) * 0.3 + 0.7;
       for (let i = 0; i < 4; i++) {
         const burstAngle = (i * Math.PI / 2) + rotationRef.current * 0.6;
@@ -239,10 +222,7 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
         const burstX = centerX + Math.cos(burstAngle) * burstDistance;
         const burstY = centerY + Math.sin(burstAngle) * burstDistance * 0.65;
         
-        const burstGradient = ctx.createRadialGradient(
-          burstX, burstY, 0,
-          burstX, burstY, 15
-        );
+        const burstGradient = ctx.createRadialGradient(burstX, burstY, 0, burstX, burstY, 15);
         burstGradient.addColorStop(0, `rgba(255, 107, 157, ${0.6 * burstIntensity})`);
         burstGradient.addColorStop(0.5, `rgba(79, 195, 247, ${0.3 * burstIntensity})`);
         burstGradient.addColorStop(1, 'rgba(0, 229, 255, 0)');
@@ -256,7 +236,7 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
 
     const animate = (time) => {
       timeRef.current = time;
-      rotationRef.current += 0.005; // slightly faster for more dynamic look
+      rotationRef.current += 0.005;
       drawBlackHole(time);
       animationRef.current = requestAnimationFrame(animate);
     };
@@ -271,13 +251,13 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
   }, []);
 
   return (
-    <div className="profile-section flex flex-col items-center justify-center min-h-screen py-20 px-4">
-      {/* Profile Image Container */}
+    <div className="profile-section flex flex-col items-center justify-center min-h-screen py-12 md:py-20 px-4">
+      {/* Profile Image - Responsive */}
       <div 
-        className={`profile-image w-[420px] h-[420px] rounded-full mb-12 relative cursor-pointer transition-all duration-700 ease-out ${isImageAnimating ? 'scale-98' : 'hover:scale-[1.02]'}`}
+        className={`profile-image w-[280px] h-[280px] sm:w-[340px] sm:h-[340px] md:w-[380px] md:h-[380px] lg:w-[420px] lg:h-[420px] rounded-full mb-8 md:mb-12 relative cursor-pointer transition-all duration-700 ease-out ${isImageAnimating ? 'scale-98' : 'hover:scale-[1.02]'}`}
         onClick={handleImageClick}
       >
-        {/* Canvas untuk blackhole effect */}
+        {/* Canvas */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <canvas 
             ref={canvasRef}
@@ -287,10 +267,10 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
           />
         </div>
         
-        {/* Ambient space glow */}
-        <div className="absolute inset-0 bg-gradient-radial from-[#2979ff]/15 via-[#7c4dff]/10 to-transparent rounded-full blur-3xl animate-pulse-slow"></div>
+        {/* Ambient glow */}
+        <div className="absolute inset-0 bg-gradient-radial from-[#2979ff]/15 via-[#7c4dff]/10 to-transparent rounded-full blur-2xl md:blur-3xl animate-pulse-slow"></div>
         
-        {/* Slow rotating cosmic dust */}
+        {/* Cosmic dust */}
         <div 
           className="absolute inset-0 rounded-full opacity-40"
           style={{
@@ -301,8 +281,8 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
         ></div>
         
         <div className="relative z-20 w-full h-full flex items-center justify-center">
-          {/* Photo frame */}
-          <div className="profile-photo w-[340px] h-[340px] rounded-full bg-gradient-to-br from-[#0a0a0a] via-[#050510] to-[#000000] flex items-center justify-center overflow-hidden shadow-[0_0_80px_rgba(79,195,247,0.4),0_0_120px_rgba(124,77,255,0.2)] border border-[#4fc3f7]/25">
+          {/* Photo frame - Responsive */}
+          <div className="profile-photo w-[220px] h-[220px] sm:w-[260px] sm:h-[260px] md:w-[300px] md:h-[300px] lg:w-[340px] lg:h-[340px] rounded-full bg-gradient-to-br from-[#0a0a0a] via-[#050510] to-[#000000] flex items-center justify-center overflow-hidden shadow-[0_0_60px_rgba(79,195,247,0.4),0_0_100px_rgba(124,77,255,0.2)] md:shadow-[0_0_80px_rgba(79,195,247,0.4),0_0_120px_rgba(124,77,255,0.2)] border border-[#4fc3f7]/25">
             {!imageLoaded && (
               <div className="w-full h-full bg-gradient-to-br from-[#000428] to-[#000b1f] animate-pulse rounded-full"></div>
             )}
@@ -310,9 +290,7 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
               src="https://forumasisten.amikompurwokerto.ac.id/assets/pengurus/Evril.png" 
               alt="Evril Fadrekha Cahyani"
               className={`w-full h-full object-cover object-top rounded-full transition-all duration-700 ${imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
-              style={{
-                objectPosition: '50% 20%'
-              }}
+              style={{ objectPosition: '50% 20%' }}
               onLoad={() => setImageLoaded(true)}
               onError={(e) => {
                 e.target.src = `https://via.placeholder.com/340x340/000000/80deea?text=Evril`;
@@ -320,39 +298,39 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
               }}
             />
             
-            {/* Inner glow ring */}
-            <div className="absolute inset-0 rounded-full border-2 border-[#4fc3f7]/15 shadow-inner"></div>
+            {/* Inner ring */}
+            <div className="absolute inset-0 rounded-full border border-[#4fc3f7]/15 md:border-2 shadow-inner"></div>
           </div>
         </div>
         
-        {/* Orbiting particles - lebih ramai */}
-        {Array.from({ length: 8 }).map((_, i) => (
+        {/* Orbiting particles - Responsive count */}
+        {Array.from({ length: isMobile ? 5 : 8 }).map((_, i) => (
           <div
             key={i}
-            className="absolute w-2 h-2 rounded-full bg-gradient-to-r from-[#4fc3f7] to-[#00e5ff] pointer-events-none"
+            className="absolute w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-gradient-to-r from-[#4fc3f7] to-[#00e5ff] pointer-events-none"
             style={{
               top: '50%',
               left: '50%',
-              transform: `rotate(${i * 45}deg) translateX(175px) rotate(-${i * 45}deg)`,
+              transform: `rotate(${i * (isMobile ? 72 : 45)}deg) translateX(${isMobile ? '115px' : '175px'}) rotate(-${i * (isMobile ? 72 : 45)}deg)`,
               animation: `orbit-particle ${6 + i * 1.5}s linear infinite`,
               animationDelay: `${i * 0.3}s`,
-              boxShadow: '0 0 10px rgba(79, 195, 247, 0.8)',
-              opacity: 0.8
+              boxShadow: '0 0 8px rgba(79, 195, 247, 0.8)',
+              opacity: 0.7
             }}
           ></div>
         ))}
         
-        {/* Space dust particles - lebih banyak */}
-        {Array.from({ length: 15 }).map((_, i) => (
+        {/* Space dust - Fewer on mobile */}
+        {Array.from({ length: isMobile ? 8 : 15 }).map((_, i) => (
           <div
             key={`dust-${i}`}
             className="absolute rounded-full bg-white pointer-events-none"
             style={{
-              width: `${0.5 + Math.random() * 1}px`,
-              height: `${0.5 + Math.random() * 1}px`,
+              width: `${0.5 + Math.random() * 0.8}px`,
+              height: `${0.5 + Math.random() * 0.8}px`,
               top: '50%',
               left: '50%',
-              transform: `rotate(${i * 24}deg) translateX(${185 + Math.random() * 25}px) rotate(-${i * 24}deg)`,
+              transform: `rotate(${i * 24}deg) translateX(${(isMobile ? 125 : 185) + Math.random() * 20}px) rotate(-${i * 24}deg)`,
               animation: `orbit-particle-slow ${10 + Math.random() * 5}s linear infinite`,
               animationDelay: `${i * 0.2}s`,
               opacity: 0.3 + Math.random() * 0.4
@@ -360,8 +338,8 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
           ></div>
         ))}
         
-        {/* Additional glowing particles */}
-        {Array.from({ length: 6 }).map((_, i) => (
+        {/* Glowing particles - Desktop only */}
+        {!isMobile && Array.from({ length: 6 }).map((_, i) => (
           <div
             key={`glow-${i}`}
             className="absolute w-1.5 h-1.5 rounded-full pointer-events-none"
@@ -379,58 +357,53 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
         ))}
       </div>
       
-      {/* Profile Info - Better organized */}
-      <div className="profile-info text-center relative z-10 max-w-3xl mx-auto">
-        {/* Name with improved spacing */}
-        <div className="relative inline-block mb-6">
-          <h2 className="name text-5xl md:text-6xl bg-gradient-to-r from-[#80deea] via-[#4fc3f7] to-[#00e5ff] bg-clip-text text-transparent font-bold tracking-wide relative leading-tight">
+      {/* Profile Info - Fully responsive */}
+      <div className="profile-info text-center relative z-10 max-w-3xl mx-auto px-4">
+        {/* Name - Responsive text */}
+        <div className="relative inline-block mb-4 md:mb-6">
+          <h2 className="name text-3xl sm:text-4xl md:text-5xl lg:text-6xl bg-gradient-to-r from-[#80deea] via-[#4fc3f7] to-[#00e5ff] bg-clip-text text-transparent font-bold tracking-wide relative leading-tight">
             <span className="relative z-10">Evril Fadrekha Cahyani</span>
             <span 
               className="absolute inset-0 bg-gradient-to-r from-[#80deea] via-[#4fc3f7] to-[#00e5ff] bg-clip-text text-transparent blur-md opacity-50"
-              style={{
-                transform: 'translate(1px, 1px)'
-              }}
+              style={{ transform: 'translate(1px, 1px)' }}
             >
               Evril Fadrekha Cahyani
             </span>
           </h2>
         </div>
         
-        {/* Status badge with cleaner design */}
+        {/* Status badge - Responsive */}
         <div 
-          className={`status inline-flex items-center gap-3 bg-gradient-to-r from-[rgba(79,195,247,0.1)] via-[rgba(124,77,255,0.08)] to-[rgba(0,229,255,0.1)] backdrop-blur-md px-8 py-4 rounded-full border border-[rgba(79,195,247,0.3)] text-lg font-medium cursor-pointer transition-all duration-500 relative overflow-hidden group shadow-[0_4px_20px_rgba(79,195,247,0.15)] ${
+          className={`status inline-flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-[rgba(79,195,247,0.1)] via-[rgba(124,77,255,0.08)] to-[rgba(0,229,255,0.1)] backdrop-blur-md px-4 py-3 sm:px-6 sm:py-3.5 md:px-8 md:py-4 rounded-full border border-[rgba(79,195,247,0.3)] text-sm sm:text-base md:text-lg font-medium cursor-pointer transition-all duration-500 relative overflow-hidden group shadow-[0_4px_20px_rgba(79,195,247,0.15)] ${
             isStatusAnimating ? 'translate-y-[-3px] scale-105' : 'hover:translate-y-[-3px] hover:shadow-[0_8px_30px_rgba(79,195,247,0.3)]'
           }`}
           onClick={handleStatusClick}
         >
-          {/* Background animation */}
           <div className="absolute inset-0 bg-gradient-to-r from-[#4fc3f7] to-[#7c4dff] opacity-0 group-hover:opacity-10 transition-opacity duration-500 rounded-full"></div>
+          <div className="absolute -top-1 -right-1 w-2.5 h-2.5 md:w-3 md:h-3 bg-[#00e5ff] rounded-full animate-ping-slow opacity-60"></div>
           
-          {/* Pulse indicator */}
-          <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#00e5ff] rounded-full animate-ping-slow opacity-60"></div>
-          
-          <i className="fas fa-medal text-2xl text-[#ffd166] relative z-10 group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_10px_rgba(255,209,102,0.6)]"></i>
+          <i className="fas fa-medal text-lg sm:text-xl md:text-2xl text-[#ffd166] relative z-10 group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_10px_rgba(255,209,102,0.6)]"></i>
           <span className="relative z-10 bg-gradient-to-r from-white via-[#80deea] to-white bg-clip-text text-transparent">
-            Semhas - Pake Jurnal, Daaaaaang
+            <span className="hidden sm:inline">Semhas - Pake Jurnal, Daaaaaang</span>
+            <span className="sm:hidden">Semhas - Pake Jurnal</span>
           </span>
           
-          {/* Shine effect */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/8 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
         </div>
         
-        {/* Description with better styling */}
-        <div className="mt-10 relative">
-          <p className="text-white/70 text-lg leading-relaxed max-w-2xl mx-auto relative z-10">
+        {/* Description - Responsive */}
+        <div className="mt-6 md:mt-10 relative">
+          <p className="text-white/70 text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl mx-auto relative z-10 px-2">
             Berikut keuntungan yang ko dapetin karna ambil jurnal:
           </p>
-          <div className="absolute -inset-x-8 -inset-y-4 bg-gradient-to-r from-[#2979ff]/5 via-[#7c4dff]/8 to-[#00e5ff]/5 blur-2xl rounded-2xl -z-10"></div>
+          <div className="absolute -inset-x-4 md:-inset-x-8 -inset-y-3 md:-inset-y-4 bg-gradient-to-r from-[#2979ff]/5 via-[#7c4dff]/8 to-[#00e5ff]/5 blur-xl md:blur-2xl rounded-2xl -z-10"></div>
         </div>
       </div>
       
       <style jsx>{`
         @keyframes orbit-particle {
-          from { transform: rotate(0deg) translateX(175px) rotate(0deg); }
-          to { transform: rotate(360deg) translateX(175px) rotate(-360deg); }
+          from { transform: rotate(0deg) translateX(var(--orbit-distance, 175px)) rotate(0deg); }
+          to { transform: rotate(360deg) translateX(var(--orbit-distance, 175px)) rotate(-360deg); }
         }
         
         @keyframes orbit-particle-reverse {
@@ -459,12 +432,11 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
           100% { transform: scale(1); opacity: 0.6; }
         }
         
-        .animate-pulse-slow {
-          animation: pulse-slow 4s ease-in-out infinite;
-        }
-        
-        .animate-ping-slow {
-          animation: ping-slow 3s ease-in-out infinite;
+        .animate-pulse-slow { animation: pulse-slow 4s ease-in-out infinite; }
+        .animate-ping-slow { animation: ping-slow 3s ease-in-out infinite; }
+
+        @media (max-width: 640px) {
+          .profile-image { touch-action: manipulation; }
         }
       `}</style>
     </div>
