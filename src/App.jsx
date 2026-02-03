@@ -80,7 +80,7 @@ function App() {
     }
     
     if (letterHasBeenOpened && !isTemporarilyUnlocked) {
-      showToast('🔒 Surat sudah dibaca. Klik bubble di kanan atas dan masukkan password "buatevril" untuk unlock surat.', 4000);
+      showToast('🔒 message udah dibaca, cm bs sekali. klo mau baca lagi, call the developer.', 4000);
     }
   };
 
