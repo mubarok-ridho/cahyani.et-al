@@ -12,7 +12,7 @@ export default function SecretLetter({
 
   useEffect(() => {
     if (letterHasBeenOpened && !isTemporarilyUnlocked) {
-      setBtnText('Surat Sudah Dibaca');
+      setBtnText('*read');
       setNoticeText('🔒 Ko udah liat, cm blh sekali.');
       setNoticeColor('text-[#ff6b6b]');
     } else if (isTemporarilyUnlocked) {
