@@ -14,7 +14,8 @@ import './App.css';
 
 function App() {
   // State management
-  const [letterHasBeenOpened, setLetterHasBeenOpened] = useLocalStorage(STORAGE_KEY, false);
+  // ✅ UBAH INI: dari false jadi true
+  const [letterHasBeenOpened, setLetterHasBeenOpened] = useLocalStorage(STORAGE_KEY, true);
   const [isTemporarilyUnlocked, setIsTemporarilyUnlocked] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showLetterModal, setShowLetterModal] = useState(false);
@@ -24,13 +25,13 @@ function App() {
 
   // Handle developer bubble click
   const handleDeveloperBubbleClick = () => {
-    if (!letterHasBeenOpened) {
-      showToast('📨 message blm diliat. Klik tombol di bwh noh', 3000);
+    if (!letterHasBeenOpened && !isTemporarilyUnlocked) {
+      showToast('📨 message udah dibaca. Kalo mau baca lagi, pake password', 3000);
       return;
     }
 
     if (isTemporarilyUnlocked) {
-      showToast('🔓 Unlocked!"', 3000);
+      showToast('🔓 Unlocked!', 3000);
       return;
     }
 
@@ -43,18 +44,13 @@ function App() {
   const handlePasswordSubmit = async () => {
     const inputPassword = passwordInput.trim().toLowerCase();
     
-    // Note: In production, this should be handled securely on the backend
     if (inputPassword === CORRECT_PASSWORD) {
-      // Password correct
       setIsTemporarilyUnlocked(true);
       setShowPasswordModal(false);
       setPasswordInput('');
-      
-      showToast('🎉 Password benar! Surat sekarang bisa dibuka', 3000);
+      showToast('🎉 Password benar! Surat bisa dibuka', 3000);
     } else {
-      // Password wrong
       setPasswordError(true);
-      
       setTimeout(() => {
         setPasswordInput('');
         setPasswordError(false);
@@ -66,8 +62,9 @@ function App() {
   const handleLetterButtonClick = () => {
     setShowLetterModal(true);
     
-    if (!letterHasBeenOpened) {
-      setLetterHasBeenOpened(true);
+    // ✅ LOGIC: Kalo masih true (belum pernah dibaca di device ini)
+    if (letterHasBeenOpened === true && !isTemporarilyUnlocked) {
+      setLetterHasBeenOpened(false); // Langsung kunci
     }
   };
 
@@ -77,10 +74,6 @@ function App() {
     
     if (isTemporarilyUnlocked) {
       setIsTemporarilyUnlocked(false);
-    }
-    
-    if (letterHasBeenOpened && !isTemporarilyUnlocked) {
-      showToast('🔒 message udah dibaca, cm bs sekali. klo mau baca lagi, call the developer.', 4000);
     }
   };
 
@@ -98,30 +91,25 @@ function App() {
 
   // Initialize on mount
   useEffect(() => {
-    // Show hint if letter has been opened but not temporarily unlocked
-    if (letterHasBeenOpened && !isTemporarilyUnlocked) {
+    if (letterHasBeenOpened === false && !isTemporarilyUnlocked) {
       setTimeout(() => {
-        showToast('🔑 locked', 5000);
+        showToast('🔒 Surat udah dibaca di device ini', 4000);
       }, 2000);
     }
   }, []);
 
   return (
     <div className="min-h-screen text-white overflow-x-hidden relative font-['Segoe_UI',system-ui,sans-serif]">
-      {/* Space Background */}
       <SpaceBackground />
       
-      {/* Developer Bubble */}
       <DeveloperBubble 
         onClick={handleDeveloperBubbleClick}
         letterOpened={letterHasBeenOpened}
         isTemporarilyUnlocked={isTemporarilyUnlocked}
       />
       
-      {/* Money Flow Card */}
       <MoneyFlowCard />
       
-      {/* Toast Notification */}
       <ToastNotification 
         show={toast.show}
         message={toast.message}
@@ -129,12 +117,9 @@ function App() {
         onClose={() => setToast(prev => ({ ...prev, show: false }))}
       />
       
-      {/* Main Container - dengan padding top yang berbeda untuk mobile/desktop */}
       <div className="container max-w-5xl w-full mx-auto px-5 sm:px-6 relative z-10 pt-20 sm:pt-8">
-        {/* Header - dengan margin bottom yang lebih kecil di mobile */}
         <div className="header text-center mb-6 sm:mb-12 relative mt-2 sm:mt-10">
           <div className="after:content-[''] after:absolute after:-bottom-3 sm:after:-bottom-5 after:left-1/2 after:-translate-x-1/2 after:w-32 sm:after:w-48 after:h-0.5 after:bg-gradient-to-r after:from-transparent after:via-[#4fc3f7] after:to-transparent">
-            {/* Ukuran font lebih kecil di mobile */}
             <div className="greeting text-[#80deea] text-sm sm:text-xl tracking-[0.2em] sm:tracking-[0.3em] uppercase mb-2 sm:mb-4">
               SELAMAT & SUKSES
             </div>
@@ -147,17 +132,14 @@ function App() {
           </div>
         </div>
         
-        {/* Profile Section - dengan margin bottom yang pas */}
         <div className="mb-6 sm:mb-12">
           <ProfileSection />
         </div>
         
-        {/* Cards Grid - dengan margin bottom yang pas */}
         <div className="mb-6 sm:mb-12">
           <CardsGrid />
         </div>
         
-        {/* Secret Letter Section */}
         <SecretLetter 
           letterHasBeenOpened={letterHasBeenOpened}
           isTemporarilyUnlocked={isTemporarilyUnlocked}
@@ -165,7 +147,6 @@ function App() {
         />
       </div>
       
-      {/* Password Modal */}
       <PasswordModal 
         isOpen={showPasswordModal}
         onClose={handleClosePasswordModal}
@@ -175,52 +156,36 @@ function App() {
         error={passwordError}
       />
       
-      {/* Letter Modal */}
       <LetterModal 
         isOpen={showLetterModal}
         onClose={handleCloseLetterModal}
       />
       
-      {/* Mobile optimization styles */}
       <style jsx>{`
         @media (max-width: 640px) {
-          /* Memberi ruang untuk card di kiri atas */
           .container {
             padding-top: 70px !important;
           }
-          
-          /* Memperbaiki jarak antar section */
           .header {
             margin-bottom: 24px !important;
           }
-          
-          /* Memastikan teks tidak ketimpa card */
           .greeting, .main-title, .subtitle {
             position: relative;
             z-index: 5;
           }
-          
-          /* Profile section spacing */
           .profile-section {
             margin-bottom: 24px !important;
           }
-          
-          /* Cards grid spacing */
           .cards-grid {
             margin-bottom: 24px !important;
           }
-          
-          /* Memperkecil jarak yang terlalu jauh */
           .mt-10 {
             margin-top: 8px !important;
           }
-          
-          /* Optimasi untuk layar sangat kecil */
           @media (max-width: 375px) {
             .main-title {
               font-size: 1.8rem !important;
             }
-            
             .greeting {
               font-size: 0.7rem !important;
             }
