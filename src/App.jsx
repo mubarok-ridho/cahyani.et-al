@@ -129,28 +129,33 @@ function App() {
         onClose={() => setToast(prev => ({ ...prev, show: false }))}
       />
       
-      {/* Main Container */}
-      <div className="container max-w-5xl w-full mx-auto py-8 px-5 sm:px-6 relative z-10">
-        {/* Header */}
-        <div className="header text-center mb-12 relative mt-10">
-          <div className="after:content-[''] after:absolute after:-bottom-5 after:left-1/2 after:-translate-x-1/2 after:w-48 after:h-0.5 after:bg-gradient-to-r after:from-transparent after:via-[#4fc3f7] after:to-transparent">
-            <div className="greeting text-[#80deea] text-xl tracking-[0.3em] uppercase mb-4">
+      {/* Main Container - dengan padding top yang berbeda untuk mobile/desktop */}
+      <div className="container max-w-5xl w-full mx-auto px-5 sm:px-6 relative z-10 pt-20 sm:pt-8">
+        {/* Header - dengan margin bottom yang lebih kecil di mobile */}
+        <div className="header text-center mb-6 sm:mb-12 relative mt-2 sm:mt-10">
+          <div className="after:content-[''] after:absolute after:-bottom-3 sm:after:-bottom-5 after:left-1/2 after:-translate-x-1/2 after:w-32 sm:after:w-48 after:h-0.5 after:bg-gradient-to-r after:from-transparent after:via-[#4fc3f7] after:to-transparent">
+            {/* Ukuran font lebih kecil di mobile */}
+            <div className="greeting text-[#80deea] text-sm sm:text-xl tracking-[0.2em] sm:tracking-[0.3em] uppercase mb-2 sm:mb-4">
               SELAMAT & SUKSES
             </div>
-            <h1 className="main-title text-4xl sm:text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-[#4fc3f7] to-[#9575cd] bg-clip-text text-transparent mb-3 drop-shadow-lg">
+            <h1 className="main-title text-3xl sm:text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-[#4fc3f7] to-[#9575cd] bg-clip-text text-transparent mb-2 sm:mb-3 drop-shadow-lg px-2">
               SEMINAR HASIL
             </h1>
-            <p className="subtitle text-lg text-white/70 max-w-2xl mx-auto">
+            <p className="subtitle text-sm sm:text-lg text-white/70 max-w-2xl mx-auto px-4">
               anjay finally penantian jurnalmu yang panjang itu selesai juga ya :D
             </p>
           </div>
         </div>
         
-        {/* Profile Section */}
-        <ProfileSection />
+        {/* Profile Section - dengan margin bottom yang pas */}
+        <div className="mb-6 sm:mb-12">
+          <ProfileSection />
+        </div>
         
-        {/* Cards Grid */}
-        <CardsGrid />
+        {/* Cards Grid - dengan margin bottom yang pas */}
+        <div className="mb-6 sm:mb-12">
+          <CardsGrid />
+        </div>
         
         {/* Secret Letter Section */}
         <SecretLetter 
@@ -175,6 +180,53 @@ function App() {
         isOpen={showLetterModal}
         onClose={handleCloseLetterModal}
       />
+      
+      {/* Mobile optimization styles */}
+      <style jsx>{`
+        @media (max-width: 640px) {
+          /* Memberi ruang untuk card di kiri atas */
+          .container {
+            padding-top: 70px !important;
+          }
+          
+          /* Memperbaiki jarak antar section */
+          .header {
+            margin-bottom: 24px !important;
+          }
+          
+          /* Memastikan teks tidak ketimpa card */
+          .greeting, .main-title, .subtitle {
+            position: relative;
+            z-index: 5;
+          }
+          
+          /* Profile section spacing */
+          .profile-section {
+            margin-bottom: 24px !important;
+          }
+          
+          /* Cards grid spacing */
+          .cards-grid {
+            margin-bottom: 24px !important;
+          }
+          
+          /* Memperkecil jarak yang terlalu jauh */
+          .mt-10 {
+            margin-top: 8px !important;
+          }
+          
+          /* Optimasi untuk layar sangat kecil */
+          @media (max-width: 375px) {
+            .main-title {
+              font-size: 1.8rem !important;
+            }
+            
+            .greeting {
+              font-size: 0.7rem !important;
+            }
+          }
+        }
+      `}</style>
     </div>
   );
 }

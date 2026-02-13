@@ -58,12 +58,12 @@ export default function LetterModal({ isOpen, onClose }) {
         <div className="absolute inset-0 bg-gradient-radial from-transparent via-black/20 to-black/50"></div>
       </div>
 
-      {/* Letter modal */}
+      {/* Letter modal - SCROLLABLE VERSION */}
       <div
-        className="letter-modal fixed inset-0 z-[1501] flex items-center justify-center p-4 animate-fade-in pointer-events-none"
+        className="letter-modal fixed inset-0 z-[1501] flex items-start justify-center p-4 overflow-y-auto pointer-events-none"
       >
         <div 
-          className="letter-container relative max-w-2xl w-full pointer-events-auto animate-slide-up-bounce"
+          className="letter-container relative max-w-2xl w-full my-8 pointer-events-auto animate-slide-up-bounce"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Outer glow effect */}
@@ -83,31 +83,31 @@ export default function LetterModal({ isOpen, onClose }) {
               backgroundSize: '24px 24px'
             }}></div>
 
-            {/* Close button */}
+            {/* Close button - sticky on mobile */}
             <button
-              className="absolute top-6 right-6 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white/60 hover:text-[#4fc3f7] hover:bg-white/10 hover:border-[#4fc3f7]/30 hover:scale-110 transition-all duration-300 group"
+              className="absolute top-6 right-6 z-20 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 border border-white/20 text-white/80 hover:text-[#4fc3f7] hover:bg-white/20 hover:border-[#4fc3f7]/30 hover:scale-110 transition-all duration-300 group backdrop-blur-md"
               onClick={onClose}
             >
               <i className="fas fa-times text-lg group-hover:rotate-90 transition-transform duration-300"></i>
             </button>
 
-            {/* Content container */}
-            <div className="relative p-8 md:p-12">
+            {/* Content container - SCROLLABLE */}
+            <div className="relative p-6 md:p-10 max-h-[80vh] overflow-y-auto custom-scrollbar">
               
               {/* Header */}
-              <div className="letter-header text-center mb-10 relative">
+              <div className="letter-header text-center mb-8 relative">
                 {/* Decorative icon */}
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-[#4fc3f7]/20 to-[#7c4dff]/20 border border-[#4fc3f7]/30 mb-4 shadow-[0_0_20px_rgba(79,195,247,0.3)]">
                   <i className="fas fa-envelope-open-text text-2xl text-[#4fc3f7]"></i>
                 </div>
 
-                <h2 className="letter-title text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#4fc3f7] via-[#9575cd] to-[#ff6b9d] bg-clip-text text-transparent mb-3 leading-tight">
+                <h2 className="letter-title text-3xl md:text-5xl font-bold bg-gradient-to-r from-[#4fc3f7] via-[#9575cd] to-[#ff6b9d] bg-clip-text text-transparent mb-2 leading-tight">
                   Selamat Semhas + LOA Abangku!
                 </h2>
-                <p className="text-white/50 text-sm tracking-wide">(Cahyani et al., 2026)</p>
+                <p className="text-white/50 text-xs md:text-sm tracking-wide">(Cahyani et al., 2026)</p>
                 
                 {/* Decorative line */}
-                <div className="flex items-center justify-center gap-2 mt-6">
+                <div className="flex items-center justify-center gap-2 mt-4">
                   <div className="h-px w-16 bg-gradient-to-r from-transparent to-[#4fc3f7]"></div>
                   <div className="w-1.5 h-1.5 rounded-full bg-[#4fc3f7] animate-pulse"></div>
                   <div className="h-px w-16 bg-gradient-to-l from-transparent to-[#4fc3f7]"></div>
@@ -115,38 +115,38 @@ export default function LetterModal({ isOpen, onClose }) {
               </div>
 
               {/* Letter content */}
-              <div className="letter-content bg-gradient-to-br from-white/8 to-white/3 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-white/10 mb-8 shadow-[0_8px_32px_rgba(0,0,0,0.2)] relative overflow-hidden">
+              <div className="letter-content bg-gradient-to-br from-white/8 to-white/3 backdrop-blur-sm rounded-2xl p-5 md:p-8 border border-white/10 mb-6 shadow-[0_8px_32px_rgba(0,0,0,0.2)] relative overflow-hidden">
                 {/* Paper texture overlay */}
                 <div className="absolute inset-0 opacity-[0.02]" style={{
                   backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 2px, white 2px, white 3px)`
                 }}></div>
 
-                <div className="relative leading-relaxed text-white/90 text-base md:text-lg space-y-4">
+                <div className="relative leading-relaxed text-white/90 text-sm md:text-lg space-y-4">
                   <p className="text-[#4fc3f7] font-medium">Halo Evril,</p>
                   
                   <p>Finally ya vril ♨️</p>
                   
-                  <p>LOAmu yang ga turun turun itu, akhirnya turun juga wkwkwk, yaa walaupun tabunganmu ..., mkny ak beliin ini biar km ttp bisa ngopi kpn aja 🤘🏼🤘🏼</p>
+                  <p>LOAmu yang ga turun turun itu, akhirnya turun juga wkwkwk, proud of you deh. Yaa walaupun tabunganmu ..., mkny w beliin ini biar u ttp bisa ngopi kpn aja 🤘🏼🤘🏼</p>
                   
-                  <div className="my-6 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+                  <div className="my-4 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
                   
-                  <p>Thanks ya vril, for listening and being there. It meant a lot to me, sorry jd sering gangguin dan risihin km.</p>
+                  <p>Thanks ya vril, for listening and being there. It meant a lot for me, sorry jd sering gangguin km.</p>
                   
-                  <p>Wish you happy always deh. apapun yg km pilih, semoga yg terbaik utk km yee, tp klo bingung, kudoain semoga diarahkan ke yang baik baik buat km, aamiin.</p>
+                  <p>Wish you happy always deh. apapun yg km pilih, semoga yg terbaik utk km yee, tp klo bingung, kudoain semoga diarahkan ke yang "baik baik" buat km, aamiin.</p>
                   
-                  <div className="bg-gradient-to-r from-[#4fc3f7]/10 to-[#7c4dff]/10 border-l-4 border-[#4fc3f7] rounded-r-lg p-4 mt-6">
-                    <p className="text-[#80deea]">⛰️ : jangan lupa ndakinya, im really wait for it!</p>
+                  <div className="bg-gradient-to-r from-[#4fc3f7]/10 to-[#7c4dff]/10 border-l-4 border-[#4fc3f7] rounded-r-lg p-4 mt-4">
+                    <p className="text-[#80deea]">⛰️ : jangan lupa ndakinya, im really wait for it! (Gajah Mungkur)</p>
                   </div>
                 </div>
               </div>
 
               {/* Footer */}
-              <div className="letter-footer text-right space-y-3">
-                <p className="text-[#80deea]/80 italic text-sm md:text-base">
-                  dari orang yang sering curhat wkwk
+              <div className="letter-footer text-right space-y-2">
+                <p className="text-[#80deea]/80 italic text-xs md:text-base">
+                  *Junior Programmer
                 </p>
                 <div className="flex items-center justify-end gap-2">
-                  <div className="text-4xl animate-wave">🧙🏼</div>
+                  <div className="text-3xl md:text-4xl animate-wave">🧙🏼</div>
                   <div className="flex gap-1">
                     <div className="w-2 h-2 rounded-full bg-[#4fc3f7] animate-pulse"></div>
                     <div className="w-2 h-2 rounded-full bg-[#7c4dff] animate-pulse" style={{ animationDelay: '0.2s' }}></div>
@@ -221,6 +221,32 @@ export default function LetterModal({ isOpen, onClose }) {
           }
         }
 
+        /* Custom scrollbar styling */
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(79, 195, 247, 0.3);
+          border-radius: 10px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(79, 195, 247, 0.5);
+        }
+
+        /* Firefox scrollbar */
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: rgba(79, 195, 247, 0.3) rgba(255, 255, 255, 0.05);
+        }
+
         .animate-fade-in {
           animation: fade-in 0.3s ease-out forwards;
         }
@@ -239,6 +265,17 @@ export default function LetterModal({ isOpen, onClose }) {
 
         .bg-gradient-radial {
           background: radial-gradient(circle, var(--tw-gradient-stops));
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 640px) {
+          .letter-container {
+            margin: 4rem auto;
+          }
+          
+          .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+          }
         }
       `}</style>
     </>

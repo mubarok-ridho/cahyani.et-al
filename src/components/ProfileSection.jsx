@@ -385,7 +385,7 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
           <i className="fas fa-medal text-lg sm:text-xl md:text-2xl text-[#ffd166] relative z-10 group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_10px_rgba(255,209,102,0.6)]"></i>
           <span className="relative z-10 bg-gradient-to-r from-white via-[#80deea] to-white bg-clip-text text-transparent">
             <span className="hidden sm:inline">Semhas - Pake Jurnal, Daaaaaang</span>
-            <span className="sm:hidden">Semhas - Pake Jurnal</span>
+            <span className="sm:hidden">Daaaaaaaaaaaang</span>
           </span>
           
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/8 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
@@ -394,7 +394,7 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
         {/* Description - Responsive */}
         <div className="mt-6 md:mt-10 relative">
           <p className="text-white/70 text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl mx-auto relative z-10 px-2">
-            Berikut keuntungan yang ko dapetin karna ambil jurnal:
+            Selamat, km dpt:
           </p>
           <div className="absolute -inset-x-4 md:-inset-x-8 -inset-y-3 md:-inset-y-4 bg-gradient-to-r from-[#2979ff]/5 via-[#7c4dff]/8 to-[#00e5ff]/5 blur-xl md:blur-2xl rounded-2xl -z-10"></div>
         </div>
