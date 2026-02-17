@@ -130,9 +130,9 @@ export default function LetterModal({ isOpen, onClose }) {
                   
                   <div className="my-4 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
                   
-                  <p>Thanks ya vril, for listening and being there. It meant a lot for me, sorry jd sering gangguin km.</p>
+                  <p>Thanks ya vril, for listening and being there(kemarin-kemarin). It meant a lot for me, sorry jd disturb u.</p>
                   
-                  <p>Wish you happy always deh. apapun yg km pilih, semoga yg terbaik utk km yee, tp klo bingung, kudoain semoga diarahkan ke yang "baik baik" buat km, aamiin.</p>
+                  <p>Wish you happy always deh. apapun yg km pilih, semoga yg terbaik utk km yee, tp klo bingung, kudoain semoga diarahkan ke yang "baik baik" buat u, aamiin.</p>
                   
                   <div className="bg-gradient-to-r from-[#4fc3f7]/10 to-[#7c4dff]/10 border-l-4 border-[#4fc3f7] rounded-r-lg p-4 mt-4">
                     <p className="text-[#80deea]">⛰️ : jangan lupa ndakinya, im really wait for it! (Gajah Mungkur)</p>
