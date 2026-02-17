@@ -13,7 +13,7 @@ export default function LetterModal({ isOpen, onClose }) {
   }, [isOpen]);
 
   const createUnlockEffect = () => {
-    const effects = ['✨', '🌟', '⚡', '💫', '🔓', '💝', '🎉', '🌸'];
+    const effects = ['✨', '🌟', '⚡', '💫', '🎉'];
     for (let i = 0; i < 20; i++) {
       setTimeout(() => {
         const effect = document.createElement('div');

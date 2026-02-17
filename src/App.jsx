@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import SpaceBackground from './components/SpaceBackground';
 import DeveloperBubble from './components/DeveloperBubble';
-import MoneyFlowCard from './components/MoneyFlowCard';
+// import MoneyFlowCard from './components/MoneyFlowCard';
 import ProfileSection from './components/ProfileSection';
 import CardsGrid from './components/CardsGrid';
 import SecretLetter from './components/SecretLetter';
@@ -108,7 +108,7 @@ function App() {
         isTemporarilyUnlocked={isTemporarilyUnlocked}
       />
       
-      <MoneyFlowCard />
+      {/* <MoneyFlowCard /> */}
       
       <ToastNotification 
         show={toast.show}

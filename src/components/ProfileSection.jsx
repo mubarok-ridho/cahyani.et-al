@@ -384,7 +384,7 @@ export default function ProfileSection({ onImageClick, onStatusClick }) {
           
           <i className="fas fa-medal text-lg sm:text-xl md:text-2xl text-[#ffd166] relative z-10 group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_10px_rgba(255,209,102,0.6)]"></i>
           <span className="relative z-10 bg-gradient-to-r from-white via-[#80deea] to-white bg-clip-text text-transparent">
-            <span className="hidden sm:inline">Semhas - Pake Jurnal, Daaaaaang</span>
+            <span className="hidden sm:inline">Daaaaaang</span>
             <span className="sm:hidden">Daaaaaaaaaaaang</span>
           </span>
           
