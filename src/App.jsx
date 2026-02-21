@@ -43,7 +43,7 @@ function App() {
   // Handle password submission
   const handlePasswordSubmit = async () => {
     const inputPassword = passwordInput.trim().toLowerCase();
-    
+
     if (inputPassword === CORRECT_PASSWORD) {
       setIsTemporarilyUnlocked(true);
       setShowPasswordModal(false);
@@ -60,18 +60,19 @@ function App() {
 
   // Handle letter button click
   const handleLetterButtonClick = () => {
-    setShowLetterModal(true);
-    
-    // ✅ LOGIC: Kalo masih true (belum pernah dibaca di device ini)
-    if (letterHasBeenOpened === true && !isTemporarilyUnlocked) {
-      setLetterHasBeenOpened(false); // Langsung kunci
+    if (letterHasBeenOpened === false) {
+      showToast('🔒 Surat sudah tidak bisa dibuka lagi.', 4000);
+      return;
     }
+
+    setShowLetterModal(true);
+    setLetterHasBeenOpened(false);
   };
 
   // Handle close letter modal
   const handleCloseLetterModal = () => {
     setShowLetterModal(false);
-    
+
     if (isTemporarilyUnlocked) {
       setIsTemporarilyUnlocked(false);
     }
@@ -101,22 +102,22 @@ function App() {
   return (
     <div className="min-h-screen text-white overflow-x-hidden relative font-['Segoe_UI',system-ui,sans-serif]">
       <SpaceBackground />
-      
-      <DeveloperBubble 
+
+      <DeveloperBubble
         onClick={handleDeveloperBubbleClick}
         letterOpened={letterHasBeenOpened}
         isTemporarilyUnlocked={isTemporarilyUnlocked}
       />
-      
+
       {/* <MoneyFlowCard /> */}
-      
-      <ToastNotification 
+
+      <ToastNotification
         show={toast.show}
         message={toast.message}
         duration={toast.duration}
         onClose={() => setToast(prev => ({ ...prev, show: false }))}
       />
-      
+
       <div className="container max-w-5xl w-full mx-auto px-5 sm:px-6 relative z-10 pt-20 sm:pt-8">
         <div className="header text-center mb-6 sm:mb-12 relative mt-2 sm:mt-10">
           <div className="after:content-[''] after:absolute after:-bottom-3 sm:after:-bottom-5 after:left-1/2 after:-translate-x-1/2 after:w-32 sm:after:w-48 after:h-0.5 after:bg-gradient-to-r after:from-transparent after:via-[#4fc3f7] after:to-transparent">
@@ -131,23 +132,23 @@ function App() {
             </p>
           </div>
         </div>
-        
+
         <div className="mb-6 sm:mb-12">
           <ProfileSection />
         </div>
-        
+
         <div className="mb-6 sm:mb-12">
           <CardsGrid />
         </div>
-        
-        <SecretLetter 
+
+        <SecretLetter
           letterHasBeenOpened={letterHasBeenOpened}
           isTemporarilyUnlocked={isTemporarilyUnlocked}
           onClick={handleLetterButtonClick}
         />
       </div>
-      
-      <PasswordModal 
+
+      <PasswordModal
         isOpen={showPasswordModal}
         onClose={handleClosePasswordModal}
         passwordInput={passwordInput}
@@ -155,12 +156,12 @@ function App() {
         onSubmit={handlePasswordSubmit}
         error={passwordError}
       />
-      
-      <LetterModal 
+
+      <LetterModal
         isOpen={showLetterModal}
         onClose={handleCloseLetterModal}
       />
-      
+
       <style jsx>{`
         @media (max-width: 640px) {
           .container {
