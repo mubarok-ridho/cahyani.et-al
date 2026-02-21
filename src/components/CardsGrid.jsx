@@ -9,8 +9,8 @@ const cardsData = [
       </svg>
     ),
     title: 'Nilai Skripsi',
-    value: 'B+',
-    description: 'B+ jg bagus kok, apalagi IP MU TINGGI BGT. lumayan la buat lulus cpt :D',
+    value: 'A',
+    description: 'Taiiii dapet A, aku aja A- yang ribet bgt skripsiny, hmm.',
     gradient: 'from-[#ffd166] via-[#ffb347] to-[#ff9a44]',
     glowColor: 'rgba(255, 209, 102, 0.4)',
     particles: ['⭐', '✨', '🌟'],
